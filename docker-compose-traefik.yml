@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  web:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.7
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--certificatesresolvers.letsencrypt_dns.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt_dns.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.letsencrypt_dns.acme.storage=/letsencrypt/acme.json"
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:8080" # The Web UI (enabled by --api)
+      - "443:443"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt:/letsencrypt

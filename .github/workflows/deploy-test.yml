@@ -1,0 +1,23 @@
+name: Deploy Openmrs3 TEST version
+on:
+  workflow_dispatch:
+    inputs:
+      nixos_deploy_fixed_tunnel_ports:
+        description: 'Server To Deploy To (Port Number)'
+        default: '3002'
+        required: true
+
+jobs:
+  deploy_emr_kunduz_test:
+    name: Deploy Openmrs3 TEST service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        
+      - name: Redeploys config in test instance
+        uses: msf-ocb/nixos-deploy@master
+        with:
+          nixos_robot_key: ${{ secrets.NIXOS_ROBOT_KEY }}
+          nixos_deploy_service: 'update_openmrs3_test.service'
+          nixos_deploy_fixed_tunnel_ports: '3002'
