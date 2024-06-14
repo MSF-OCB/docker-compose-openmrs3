@@ -15,8 +15,7 @@ then
 fi
 
 chmod -vR a=r-wx,u=wr,a+X *
-chmod -vR a=r-wx,u=wr,a+X properties/*
-chmod -vR a=r-wx,u=wr,a+X sqls/*
+chmod -vR a=r-wx,u=wr,a+X distro/*
 
 echo "Pulling latest image from ${MSFOCB_DEPLOY_DIR}..."
 
