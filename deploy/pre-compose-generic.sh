@@ -5,7 +5,7 @@ set -e
 
 environment="$1"
 
-echo "Generating the emr-"${environment}" environment(.env) file..."
+echo "Generating the openmrs3-emr-"${environment}" environment(.env) file..."
 
 ./deploy/generateenv.sh ${environment}
 
@@ -20,6 +20,6 @@ chmod -vR a=r-wx,u=wr,a+X sqls/*
 
 echo "Pulling latest image from ${MSFOCB_DEPLOY_DIR}..."
 
-docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-db.yml" --file "${MSFOCB_DEPLOY_DIR}/docker-compose-apps.yml" pull
+docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" pull
 
 echo "Done."
