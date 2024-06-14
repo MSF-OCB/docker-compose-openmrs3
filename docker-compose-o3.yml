@@ -14,8 +14,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.bahmni_chk.entrypoints=websecure
-      #- traefik.http.routers.bahmni_chk.rule=Host(`${BAHMNI_DOMAIN}`)
-      - traefik.http.routers.bahmni_chk.rule=Host(`o3.emr.ocb.msf.org`)
+      - traefik.http.routers.bahmni_chk.rule=Host(`OPENMRS_DOMAIN`)
       - traefik.http.routers.bahmni_chk.tls.certresolver=letsencrypt_dns
       - traefik.http.middlewares.bahmni_chk-pathregex.replacepathregex.regex=^/openmrs/spa/(.*)
       - traefik.http.middlewares.bahmni_chk-pathregex.replacepathregex.replacement=/openmrs/spa/$$1
