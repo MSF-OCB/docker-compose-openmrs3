@@ -10,6 +10,9 @@ services:
       - backend
     expose:
      - 80
+    networks:
+      - web
+      - openmrs3
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -36,6 +39,10 @@ services:
       timeout: 5s
     depends_on:
       - backend
+    networks:
+      openmrs3:
+        aliases:
+          - frontend
 
   # OpenMRS Core Backend
   backend:
@@ -54,6 +61,10 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
       timeout: 5s
+    networks:
+      openmrs3:
+        aliases:
+          - backend
     volumes:
       - openmrs-data:/openmrs
       - tomcat-data:/usr/local/tomcat
@@ -84,6 +95,10 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
     ports:
       - 3307:3306
+    networks:
+      openmrs3:
+        aliases:
+          - db
     volumes:
       - db-data:/var/lib/mysql
       - ./FHIR/mysql.cnf:/etc/mysql/conf.d/custom.cnf  # mysql config preconfigured to allow binlog/debezium
@@ -92,3 +107,8 @@ volumes:
   openmrs-data: ~
   tomcat-data: ~
   db-data: ~
+networks:
+  openmrs3:
+    name: o3
+  web:
+    external: true
