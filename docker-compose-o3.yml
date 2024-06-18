@@ -10,11 +10,14 @@ services:
       - backend
     expose:
      - 80
+    networks:
+      - web
+      - openmrs3
     restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.http.routers.bahmni_chk.entrypoints=websecure
-      - traefik.http.routers.bahmni_chk.rule=Host(`OPENMRS_DOMAIN`)
+      - traefik.http.routers.bahmni_chk.rule=Host(`o3.emr.ocb.msf.org`)
       - traefik.http.routers.bahmni_chk.tls.certresolver=letsencrypt_dns
       - traefik.http.middlewares.bahmni_chk-pathregex.replacepathregex.regex=^/openmrs/spa/(.*)
       - traefik.http.middlewares.bahmni_chk-pathregex.replacepathregex.replacement=/openmrs/spa/$$1
@@ -36,6 +39,10 @@ services:
       timeout: 5s
     depends_on:
       - backend
+    networks:
+      openmrs3:
+        aliases:
+          - frontend
 
   # OpenMRS Core Backend
   backend:
@@ -54,8 +61,13 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
       timeout: 5s
+    networks:
+      openmrs3:
+        aliases:
+          - backend
     volumes:
-      - openmrs-data:/openmrs/data
+      - openmrs-data:/openmrs
+      - tomcat-data:/usr/local/tomcat
       - ./distro/configuration:/openmrs/distribution/openmrs_config
       - ./distro/openmrs_modules/event-2.10.0.omod:/openmrs/distribution/openmrs_modules/event-2.10.0.omod
       - ./distro/openmrs_modules/labonfhir-1.3.1-SNAPSHOT.omod:/openmrs/distribution/openmrs_modules/labonfhir-1.3.1-SNAPSHOT.omod
@@ -81,12 +93,22 @@ services:
       MYSQL_USER: ${OMRS_DB_USER:-openmrs}
       MYSQL_PASSWORD: ${OMRS_DB_PASSWORD:-openmrs}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
-    ports: 
+    ports:
       - 3307:3306
+    networks:
+      openmrs3:
+        aliases:
+          - db
     volumes:
       - db-data:/var/lib/mysql
       - ./FHIR/mysql.cnf:/etc/mysql/conf.d/custom.cnf  # mysql config preconfigured to allow binlog/debezium
 
 volumes:
   openmrs-data: ~
+  tomcat-data: ~
   db-data: ~
+networks:
+  openmrs3:
+    name: o3
+  web:
+    external: true
