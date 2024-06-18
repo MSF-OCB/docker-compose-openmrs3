@@ -30,4 +30,7 @@ docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never
 docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chown -R 1001:0 /usr/local/tomcat
 
 
+docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chmod -R 775 /usr/local/tomcat
+
+
 echo "Done."
