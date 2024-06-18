@@ -55,7 +55,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
       timeout: 5s
     volumes:
-      - openmrs-data:/openmrs/data
+      - openmrs-data:/openmrs
       - ./distro/configuration:/openmrs/distribution/openmrs_config
       - ./distro/openmrs_modules/event-2.10.0.omod:/openmrs/distribution/openmrs_modules/event-2.10.0.omod
       - ./distro/openmrs_modules/labonfhir-1.3.1-SNAPSHOT.omod:/openmrs/distribution/openmrs_modules/labonfhir-1.3.1-SNAPSHOT.omod
@@ -81,7 +81,7 @@ services:
       MYSQL_USER: ${OMRS_DB_USER:-openmrs}
       MYSQL_PASSWORD: ${OMRS_DB_PASSWORD:-openmrs}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
-    ports: 
+    ports:
       - 3307:3306
     volumes:
       - db-data:/var/lib/mysql
