@@ -25,6 +25,6 @@ docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never
 echo "Starting the openmrs3-emr-${environment} environment..."
 
 
-docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chown -R 1000:1000 /openmrs
+docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chown -R 1001:0 /openmrs
 
 echo "Done."
