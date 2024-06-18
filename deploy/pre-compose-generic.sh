@@ -14,8 +14,8 @@ then
    mkdir ./backup-data
 fi
 
-chmod -vR a=r-wx,u=wr,a+X *
-chmod -vR a=r-wx,u=wr,a+X distro/*
+#chmod -vR a=r-wx,u=wr,a+X *
+#chmod -vR a=r-wx,u=wr,a+X distro/*
 
 echo "Pulling latest image from ${MSFOCB_DEPLOY_DIR}..."
 
@@ -26,5 +26,7 @@ echo "Starting the openmrs3-emr-${environment} environment..."
 
 
 docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chown -R 1001:0 /openmrs
+
+docker-compose --verbose --project-directory "${MSFOCB_DEPLOY_DIR}" --ansi never --file "${MSFOCB_DEPLOY_DIR}/docker-compose-o3.yml" run -u 0 --rm  backend chmod -R 755 /openmrs
 
 echo "Done."
