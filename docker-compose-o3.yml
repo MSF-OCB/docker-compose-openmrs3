@@ -4,6 +4,7 @@ services:
   # Networking
   gateway:
     container_name: openmrs-gateway
+    profiles: ["openmrs3"]
     image: openmrs/openmrs-reference-application-3-gateway:${TAG:-nightly}
     depends_on:
       - frontend
@@ -25,10 +26,27 @@ services:
     volumes:
       - "./gateway/nginx.conf:/etc/nginx/nginx.conf"
       - "./gateway/default.conf.template:/etc/nginx/templates/default.conf.template"
+  proxygateway:
+    container_name: openmrs-gateway
+    profiles: ["openmrs3-proxied"]
+    image: openmrs/openmrs-reference-application-3-gateway:${TAG:-nightly}
+    depends_on:
+      - frontend
+      - backend
+    expose:
+     - 80
+    networks:
+      - web
+      - openmrs3
+    restart: unless-stopped
+    volumes:
+      - "./gateway/nginx.conf:/etc/nginx/nginx.conf"
+      - "./gateway/default.conf.template:/etc/nginx/templates/default.conf.template"
 
   # OpenMRS 3 Frontend
   frontend:
     container_name: openmrs-frontend
+    profiles: ["openmrs3","openmrs3-proxied"]
     image: msfocg/openmrs3-frontend:${HOSTNAME_TAG:-dev}
     environment:
       SPA_PATH: /openmrs/spa
@@ -47,6 +65,7 @@ services:
   # OpenMRS Core Backend
   backend:
     container_name: openmrs-backend
+    profiles: ["openmrs3","openmrs3-proxied"]
     image: msfocg/openmrs3-backend:${HOSTNAME_TAG:-dev}
     depends_on:
       - db
@@ -75,6 +94,7 @@ services:
   # MariaDB
   db:
     container_name: openmrs-db
+    profiles: ["openmrs3","openmrs3-proxied"]
     image: mariadb:10.8.2
     command: "mysqld --character-set-server=utf8 --collation-server=utf8_general_ci"
     healthcheck:
