@@ -15,6 +15,6 @@ function getprop {
 }
 
 echo "COMPOSE_PROJECT_NAME=openmrs3_$1" >> "$FILE"
-echo "COMPOSE_PROFILES=${COMPOSE_PROFILES?}" >> "$FILE"
+echo "COMPOSE_PROFILES=$(getprop 'COMPOSE_PROFILES')" >> "$FILE"
 echo "OPENMRS_ENV=$1" >> "$FILE"
 echo "OPENMRS_DOMAIN=$(getprop 'OPENMRS_DOMAIN')" >> "$FILE"
